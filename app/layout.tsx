@@ -1,0 +1,19 @@
+import type { Metadata } from "next";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "StudyFlow — Know what to study today",
+  description: "Paste in your school workload and StudyFlow builds a daily study plan for you.",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body className="min-h-screen">{children}</body>
+    </html>
+  );
+}
