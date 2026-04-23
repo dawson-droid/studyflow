@@ -9,6 +9,7 @@ export default function SettingsPage() {
   const [settings, setSettings] = useState<AppSettings>({
     autoCompleteOnAllSessionsDone: false,
     autoCompleteOnAllSubtasksDone: false,
+    autoSplitSessionTime: false,
     autoReplan: false,
     suggestedPlanning: false,
   });
@@ -45,6 +46,12 @@ export default function SettingsPage() {
             description="When all steps (subtasks) for an assignment are checked off, automatically mark the whole assignment as complete."
             checked={settings.autoCompleteOnAllSubtasksDone}
             onChange={(v) => update("autoCompleteOnAllSubtasksDone", v)}
+          />
+          <SettingRow
+            title="Auto-split study time across sessions"
+            description="When adding a study session, automatically pre-fill the time as an even split of the total estimated minutes across all sessions. You can still adjust it manually."
+            checked={settings.autoSplitSessionTime}
+            onChange={(v) => update("autoSplitSessionTime", v)}
           />
         </div>
       </section>

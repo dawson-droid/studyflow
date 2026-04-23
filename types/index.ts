@@ -20,6 +20,7 @@ export interface StudySession {
   id: string;
   date: string;           // "YYYY-MM-DD"
   subtaskIds: string[];   // which subtasks are planned for this session
+  durationMinutes: number;
   done: boolean;
   completedAt?: string;
 }
@@ -43,6 +44,7 @@ export interface Assignment {
 export interface AppSettings {
   autoCompleteOnAllSessionsDone: boolean;
   autoCompleteOnAllSubtasksDone: boolean;
+  autoSplitSessionTime: boolean;
   autoReplan: boolean;        // premium
   suggestedPlanning: boolean; // premium
 }

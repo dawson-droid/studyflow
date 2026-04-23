@@ -43,6 +43,7 @@ export default function AssignmentsPage() {
   const [sessionPanelId, setSessionPanelId] = useState<string | null>(null);
   const [newSessionDate, setNewSessionDate] = useState(todayStr());
   const [newSessionSubtaskIds, setNewSessionSubtaskIds] = useState<string[]>([]);
+  const [newSessionMinutes, setNewSessionMinutes] = useState(30);
   // Sessions dropdown (view/mark-done existing sessions)
   const [sessionsDropdownId, setSessionsDropdownId] = useState<string | null>(null);
   // Delete confirmation
@@ -143,6 +144,12 @@ export default function AssignmentsPage() {
     setSessionPanelId(a.id);
     setNewSessionDate(todayStr());
     setNewSessionSubtaskIds([]);
+    const settings = loadSettings();
+    const sessionCount = a.studySessions.filter((s) => !s.done).length + 1;
+    const minutes = settings.autoSplitSessionTime
+      ? Math.round(a.estimatedMinutes / sessionCount)
+      : a.estimatedMinutes;
+    setNewSessionMinutes(Math.max(5, minutes));
   }
 
   function addSession(a: Assignment) {
@@ -151,12 +158,14 @@ export default function AssignmentsPage() {
       id: generateId(),
       date: newSessionDate,
       subtaskIds: newSessionSubtaskIds,
+      durationMinutes: newSessionMinutes,
       done: false,
     };
     saveAssignment({ ...a, studySessions: [...a.studySessions, session] });
     setAssignments(loadData().assignments);
     setNewSessionDate(todayStr());
     setNewSessionSubtaskIds([]);
+    setNewSessionMinutes(30);
   }
 
   function deleteSession(a: Assignment, sessionId: string) {
@@ -428,7 +437,7 @@ export default function AssignmentsPage() {
                                     Steps: {plannedSubtasks.map((s) => s.title).join(", ")}
                                   </p>
                                 )}
-                                <p className="text-xs text-gray-400 mt-0.5">{a.estimatedMinutes} min estimated</p>
+                                <p className="text-xs text-gray-400 mt-0.5">{sess.durationMinutes} min</p>
                               </div>
                               <div className="flex gap-1 shrink-0">
                                 {!sess.done && (
@@ -470,6 +479,17 @@ export default function AssignmentsPage() {
                           value={newSessionDate}
                           onChange={(e) => setNewSessionDate(e.target.value)}
                         />
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <input
+                            type="number"
+                            min={5}
+                            step={5}
+                            className="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            value={newSessionMinutes}
+                            onChange={(e) => setNewSessionMinutes(Number(e.target.value))}
+                          />
+                          <span className="text-xs text-gray-400">min</span>
+                        </div>
                       </div>
 
                       {a.subtasks.length > 0 && (

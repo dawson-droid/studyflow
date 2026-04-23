@@ -211,7 +211,9 @@ export default function DashboardPage() {
                             {cls && <span className="text-xs text-gray-400">{cls.name}</span>}
                             <Badge label={a.priority} variant="priority" />
                             <span className="text-xs text-gray-400">{getDueLabel(a.dueDate)}</span>
-                            <span className="text-xs text-gray-400">{a.estimatedMinutes} min</span>
+                            <span className="text-xs text-gray-400">
+                              {todaySession ? `${todaySession.durationMinutes} min today` : `${a.estimatedMinutes} min total`}
+                            </span>
                           </div>
                           {todaySession && sessionSubtasks.length > 0 && (
                             <p className="text-xs text-indigo-500 mt-1">

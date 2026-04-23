@@ -12,6 +12,7 @@ const defaultData: StudyFlowData = {
 const defaultSettings: AppSettings = {
   autoCompleteOnAllSessionsDone: false,
   autoCompleteOnAllSubtasksDone: false,
+  autoSplitSessionTime: false,
   autoReplan: false,
   suggestedPlanning: false,
 };
@@ -22,13 +23,19 @@ function migrate(data: StudyFlowData): StudyFlowData {
     const raw = a as Assignment & { scheduledDate?: string };
     if (!a.studySessions) {
       const sessions = raw.scheduledDate
-        ? [{ id: Math.random().toString(36).slice(2, 10), date: raw.scheduledDate, subtaskIds: [], done: false }]
+        ? [{ id: Math.random().toString(36).slice(2, 10), date: raw.scheduledDate, subtaskIds: [], durationMinutes: a.estimatedMinutes, done: false }]
         : [];
       const { scheduledDate: _removed, ...rest } = raw;
       void _removed;
       return { ...rest, studySessions: sessions };
     }
-    return a;
+    // Backfill durationMinutes on sessions that predate this field
+    return {
+      ...a,
+      studySessions: a.studySessions.map((s) =>
+        s.durationMinutes == null ? { ...s, durationMinutes: a.estimatedMinutes } : s
+      ),
+    };
   });
   return data;
 }

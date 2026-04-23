@@ -290,7 +290,7 @@ function PlanSection({
                                   Steps: {plannedSubtasks.map((s) => s.title).join(", ")}
                                 </p>
                               )}
-                              <p className="text-xs text-gray-400 mt-0.5">{a.estimatedMinutes} min</p>
+                              <p className="text-xs text-gray-400 mt-0.5">{sess.durationMinutes} min</p>
                             </div>
                             {!sess.done && (
                               <button
