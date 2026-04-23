@@ -8,6 +8,7 @@ import Link from "next/link";
 export default function SettingsPage() {
   const [settings, setSettings] = useState<AppSettings>({
     autoCompleteOnAllSessionsDone: false,
+    autoCompleteOnAllSubtasksDone: false,
     autoReplan: false,
     suggestedPlanning: false,
   });
