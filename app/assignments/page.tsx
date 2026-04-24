@@ -375,7 +375,9 @@ export default function AssignmentsPage() {
                       </button>
                     )}
                     <button
-                      onClick={() => setSessionPanelId(sessionOpen ? null : a.id)}
+                      onClick={() => {
+                        if (sessionOpen) { setSessionPanelId(null); } else { openSessionPanel(a); }
+                      }}
                       className="text-xs text-gray-400 hover:text-indigo-600 px-2 py-1 rounded-lg hover:bg-indigo-50 transition-colors"
                     >
                       {sessionOpen ? "▲ Plan" : "▼ Plan for..."}
