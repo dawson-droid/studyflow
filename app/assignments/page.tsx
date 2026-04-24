@@ -154,14 +154,23 @@ export default function AssignmentsPage() {
 
   function addSession(a: Assignment) {
     if (!newSessionDate) return;
-    const session: StudySession = {
+    const newSession: StudySession = {
       id: generateId(),
       date: newSessionDate,
       subtaskIds: newSessionSubtaskIds,
       durationMinutes: newSessionMinutes,
       done: false,
     };
-    saveAssignment({ ...a, studySessions: [...a.studySessions, session] });
+    const settings = loadSettings();
+    let updatedSessions = [...a.studySessions, newSession];
+    if (settings.autoSplitSessionTime) {
+      const undoneCount = updatedSessions.filter((s) => !s.done).length;
+      const splitMinutes = Math.max(5, Math.round(a.estimatedMinutes / undoneCount));
+      updatedSessions = updatedSessions.map((s) =>
+        s.done ? s : { ...s, durationMinutes: splitMinutes }
+      );
+    }
+    saveAssignment({ ...a, studySessions: updatedSessions });
     setAssignments(loadData().assignments);
     setNewSessionDate(todayStr());
     setNewSessionSubtaskIds([]);
